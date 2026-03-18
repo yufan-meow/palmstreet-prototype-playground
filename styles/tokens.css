@@ -1,0 +1,69 @@
+/* ============================================================
+   Palmstreet Branch Design System — Semantic Token Layer
+   Source of truth for all UI color decisions.
+   Never use raw hex values in components — always use var(--token-name).
+   ============================================================ */
+
+:root {
+  /* ── Content tokens (text, icons) ── */
+  --content-primary:           #1B1B1B;
+  --content-secondary:         #5C5C5C;
+  --content-tertiary:          #8C8C8C;
+  --content-quaternary:        #B8B8B8;
+  --content-primary-inverse:   #F8F8F8;
+  --content-secondary-inverse: #C4C4C4;
+  --content-tertiary-inverse:  #8C8C8C;
+  --content-quaternary-inverse:#5C5C5C;
+  --content-always-white:      #FFFFFF;
+  --content-always-black:      #000000;
+  --content-interactive:       #2269EC;
+  --content-destructive:       #D93025;
+  --content-success:           #1E8A4C;
+  --content-warning:           #D97706;
+
+  /* ── Section tokens (surfaces) ── */
+  --section-basement:          #FFFFFF;
+  --section-floor-1:           #F8F8F8;
+  --section-floor-2:           #DDDDDD;
+  --section-basement-inverse:  #1B1B1B;
+  --section-floor-1-inverse:   #252525;
+  --section-floor-2-inverse:   #2C2C2C;
+  --section-interactive:       rgba(0, 0, 0, 0.05);
+  --section-destructive:       #FEE2E2;
+  --section-success:           #DCFCE7;
+  --section-warning:           #FEF3C7;
+  --section-cta:               #B9EC51;
+  --section-always-white:      #FFFFFF;
+  --section-always-black:      #000000;
+  --scrim-heavy:               rgba(0, 0, 0, 0.6);
+  --scrim-light:               rgba(0, 0, 0, 0.3);
+
+  /* ── Line tokens (borders) ── */
+  --border:                    #DDDDDD;
+  --border-strong:             #1B1B1B;
+  --border-destructive:        #D93025;
+  --border-success:            #1E8A4C;
+}
+
+/* ── Dark mode ── */
+:root[data-theme="dark"] {
+  --content-primary:           #F8F8F8;
+  --content-secondary:         #C4C4C4;
+  --content-tertiary:          #8C8C8C;
+  --content-quaternary:        #5C5C5C;
+  --content-primary-inverse:   #1B1B1B;
+  --content-secondary-inverse: #5C5C5C;
+  --content-tertiary-inverse:  #8C8C8C;
+  --content-quaternary-inverse:#B8B8B8;
+
+  --section-basement:          #1B1B1B;
+  --section-floor-1:           #252525;
+  --section-floor-2:           #2C2C2C;
+  --section-basement-inverse:  #FFFFFF;
+  --section-floor-1-inverse:   #F8F8F8;
+  --section-floor-2-inverse:   #DDDDDD;
+  --section-interactive:       rgba(255, 255, 255, 0.08);
+
+  --border:                    #2C2C2C;
+  --border-strong:             #F8F8F8;
+}
