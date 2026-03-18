@@ -1,6 +1,18 @@
 <template>
   <div class="root">
 
+    <!-- Proto chrome bar -->
+    <div class="proto-bar">
+      <NuxtLink to="/" class="back-link">
+        <span class="material-symbols-rounded" style="font-size:20px">arrow_back</span>
+        <span>Playground</span>
+      </NuxtLink>
+      <span class="proto-label">Bulk Edit</span>
+      <button class="proto-theme-toggle" @click="toggleTheme()">
+        <span class="material-symbols-rounded" style="font-size:18px">{{ theme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+    </div>
+
     <!-- ═══════════════════════════════════════════
          LISTINGS VIEW
     ═══════════════════════════════════════════ -->
@@ -277,6 +289,10 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
 
+// ─── Theme (provided by app.vue) ─────────────────────
+const theme = inject('theme')
+const toggleTheme = inject('toggleTheme')
+
 // ─── State ───────────────────────────────────────────
 const showBulkEdit = ref(false)
 const hasChanges = ref(false)
@@ -361,6 +377,46 @@ function saveChanges() {
   min-height: 100vh;
   color: var(--content-primary);
   position: relative;
+}
+
+/* ─────────────────────────────────────────────────────
+   PROTO CHROME BAR
+───────────────────────────────────────────────────── */
+.proto-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--section-floor-1);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--content-interactive);
+  text-decoration: none;
+}
+.proto-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--content-secondary);
+}
+.proto-theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--section-basement);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--content-primary);
 }
 
 /* ─────────────────────────────────────────────────────
