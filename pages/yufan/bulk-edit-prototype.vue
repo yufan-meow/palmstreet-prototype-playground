@@ -120,7 +120,7 @@
     ═══════════════════════════════════════════ -->
     <template v-else>
 
-      <!-- Sticky header -->
+      <!-- Sticky sub-header — sits below proto-bar -->
       <div class="be-header">
         <div class="be-header-left">
           <button class="icon-btn" @click="closeBulkEdit">
@@ -147,15 +147,42 @@
         <table class="be-table">
           <thead>
             <tr>
-              <th class="col-check"></th>
-              <th class="col-image">Image</th>
-              <th class="col-title">Title</th>
-              <th class="col-stock">Total stock</th>
-              <th class="col-price">Price</th>
-              <th class="col-type">Type</th>
-              <th class="col-vis">Visibility</th>
-              <th class="col-ship">Shipping</th>
-              <th class="col-sku">SKU</th>
+              <!-- Each th: resizable via drag handle, width driven by colWidths -->
+              <th :style="{ width: colWidths.check + 'px' }">
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'check')"></div>
+              </th>
+              <th :style="{ width: colWidths.image + 'px' }">
+                Image
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'image')"></div>
+              </th>
+              <th :style="{ width: colWidths.title + 'px' }">
+                Title
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'title')"></div>
+              </th>
+              <th :style="{ width: colWidths.stock + 'px' }">
+                Total stock
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'stock')"></div>
+              </th>
+              <th :style="{ width: colWidths.price + 'px' }">
+                Price
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'price')"></div>
+              </th>
+              <th :style="{ width: colWidths.type + 'px' }">
+                Type
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'type')"></div>
+              </th>
+              <th :style="{ width: colWidths.vis + 'px' }">
+                Visibility
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'vis')"></div>
+              </th>
+              <th :style="{ width: colWidths.ship + 'px' }">
+                Shipping
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'ship')"></div>
+              </th>
+              <th :style="{ width: colWidths.sku + 'px' }">
+                SKU
+                <div class="resize-handle" @mousedown.prevent="startResize($event, 'sku')"></div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -166,21 +193,22 @@
               :class="{ 'be-row-editing': editingRow === idx }"
             >
               <!-- Checkbox -->
-              <td class="col-check td-cell">
+              <td class="td-cell" :style="{ width: colWidths.check + 'px' }">
                 <input type="checkbox" class="cb" />
               </td>
 
               <!-- Image -->
-              <td class="col-image td-cell">
+              <td class="td-cell" :style="{ width: colWidths.image + 'px' }">
                 <div class="be-thumb">
                   <span class="material-symbols-rounded thumb-icon-sm">local_florist</span>
                 </div>
               </td>
 
-              <!-- Title — click to edit -->
+              <!-- Title — click to edit, overflow arrow when > 20 chars -->
               <td
-                class="col-title td-cell"
+                class="td-cell"
                 :class="{ 'cell-editing': editingRow === idx }"
+                :style="{ width: colWidths.title + 'px' }"
               >
                 <input
                   v-if="editingRow === idx"
@@ -192,20 +220,26 @@
                   @keyup.escape="editingRow = null"
                   @input="hasChanges = true"
                 />
-                <span
+                <div
                   v-else
                   class="be-title-text"
                   @click="startEditTitle(idx)"
-                >{{ listing.title }}</span>
+                >
+                  <span class="title-inner">{{ listing.title }}</span>
+                  <span
+                    v-if="listing.title.length > 20"
+                    class="material-symbols-rounded title-overflow-arrow"
+                  >chevron_right</span>
+                </div>
               </td>
 
               <!-- Total stock -->
-              <td class="col-stock td-cell">
+              <td class="td-cell" :style="{ width: colWidths.stock + 'px' }">
                 <span class="cell-text">{{ listing.stock }}</span>
               </td>
 
               <!-- Price -->
-              <td class="col-price td-cell">
+              <td class="td-cell" :style="{ width: colWidths.price + 'px' }">
                 <input
                   v-model="listing.price"
                   type="number"
@@ -217,13 +251,9 @@
               </td>
 
               <!-- Type dropdown -->
-              <td class="col-type td-cell">
+              <td class="td-cell" :style="{ width: colWidths.type + 'px' }">
                 <div class="be-select-wrap">
-                  <select
-                    v-model="listing.type"
-                    class="be-select"
-                    @change="hasChanges = true"
-                  >
+                  <select v-model="listing.type" class="be-select" @change="hasChanges = true">
                     <option>Auction</option>
                     <option>Buy Now</option>
                   </select>
@@ -232,13 +262,9 @@
               </td>
 
               <!-- Visibility dropdown -->
-              <td class="col-vis td-cell">
+              <td class="td-cell" :style="{ width: colWidths.vis + 'px' }">
                 <div class="be-select-wrap">
-                  <select
-                    v-model="listing.visibility"
-                    class="be-select"
-                    @change="hasChanges = true"
-                  >
+                  <select v-model="listing.visibility" class="be-select" @change="hasChanges = true">
                     <option>Private</option>
                     <option>Public</option>
                   </select>
@@ -247,13 +273,9 @@
               </td>
 
               <!-- Shipping dropdown -->
-              <td class="col-ship td-cell">
+              <td class="td-cell" :style="{ width: colWidths.ship + 'px' }">
                 <div class="be-select-wrap">
-                  <select
-                    v-model="listing.shipping"
-                    class="be-select"
-                    @change="hasChanges = true"
-                  >
+                  <select v-model="listing.shipping" class="be-select" @change="hasChanges = true">
                     <option>Test shipping ($10 + $2)</option>
                     <option>Standard ($5 + $1)</option>
                     <option>Free shipping</option>
@@ -263,7 +285,7 @@
               </td>
 
               <!-- SKU -->
-              <td class="col-sku td-cell">
+              <td class="td-cell" :style="{ width: colWidths.sku + 'px' }">
                 <input
                   v-model="listing.sku"
                   class="be-sku-input"
@@ -276,7 +298,7 @@
         </table>
       </div>
 
-      <!-- Save success toast (prototype only) -->
+      <!-- Save success toast -->
       <div v-if="showToast" class="toast">
         <span class="material-symbols-rounded toast-icon">check_circle</span>
         <span class="toast-text">{{ selectedListings.length }} listings updated</span>
@@ -289,7 +311,7 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
 
-// ─── Theme (provided by app.vue) ─────────────────────
+// ─── Theme ────────────────────────────────────────────
 const theme = inject('theme')
 const toggleTheme = inject('toggleTheme')
 
@@ -307,16 +329,51 @@ const tabs = [
 ]
 const activeTab = ref('private')
 
+// ─── Column widths (resizable) ────────────────────────
+const colWidths = ref({
+  check: 40,
+  image: 72,
+  title: 220,
+  stock: 110,
+  price: 100,
+  type: 148,
+  vis: 148,
+  ship: 230,
+  sku: 180,
+})
+
+// ─── Column resize logic ──────────────────────────────
+const activeResize = ref(null)
+
+function startResize(e, colKey) {
+  activeResize.value = { colKey, startX: e.clientX, startWidth: colWidths.value[colKey] }
+
+  function onMove(e) {
+    if (!activeResize.value) return
+    const delta = e.clientX - activeResize.value.startX
+    colWidths.value[activeResize.value.colKey] = Math.max(48, activeResize.value.startWidth + delta)
+  }
+
+  function onUp() {
+    activeResize.value = null
+    window.removeEventListener('mousemove', onMove)
+    window.removeEventListener('mouseup', onUp)
+  }
+
+  window.addEventListener('mousemove', onMove)
+  window.addEventListener('mouseup', onUp)
+}
+
 // ─── Mock data ────────────────────────────────────────
 const listings = ref([
-  { id: 1, title: 'monstera albo', stock: 1, price: '25.00', type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 2, title: 'test6',         stock: 1, price: '2.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 3, title: 'test 3',        stock: 1, price: '1.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 4, title: 'test 2',        stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 5, title: 'test',          stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 6, title: 'marble',        stock: 1, price: '2.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
-  { id: 7, title: 'hhhhhh',        stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: false, variants: 1 },
-  { id: 8, title: 'watch',         stock: 1, price: '5.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: false, variants: 1 },
+  { id: 1, title: 'monstera albo variegata', stock: 1, price: '25.00', type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 2, title: 'test6',                   stock: 1, price: '2.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 3, title: 'test 3',                  stock: 1, price: '1.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 4, title: 'test 2',                  stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 5, title: 'test',                    stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 6, title: 'marble — large specimen', stock: 1, price: '2.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: true,  variants: 1 },
+  { id: 7, title: 'hhhhhh',                  stock: 1, price: '1.00',  type: 'Buy Now',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: false, variants: 1 },
+  { id: 8, title: 'watch',                   stock: 1, price: '5.00',  type: 'Auction',  visibility: 'Private', shipping: 'Test shipping ($10 + $2)', sku: '', selected: false, variants: 1 },
 ])
 
 // ─── Computed ─────────────────────────────────────────
@@ -349,9 +406,7 @@ async function startEditTitle(idx) {
   editingRow.value = idx
   hasChanges.value = true
   await nextTick()
-  const el = Array.isArray(titleInputEl.value)
-    ? titleInputEl.value[0]
-    : titleInputEl.value
+  const el = Array.isArray(titleInputEl.value) ? titleInputEl.value[0] : titleInputEl.value
   el?.focus()
   el?.select()
 }
@@ -380,18 +435,20 @@ function saveChanges() {
 }
 
 /* ─────────────────────────────────────────────────────
-   PROTO CHROME BAR
+   PROTO CHROME BAR  — explicit height so children can offset against it
 ───────────────────────────────────────────────────── */
 .proto-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 0 24px;
+  height: 48px;              /* explicit — be-header and thead reference this */
   border-bottom: 1px solid var(--border);
   background: var(--section-floor-1);
   position: sticky;
   top: 0;
   z-index: 30;
+  box-sizing: border-box;
 }
 .back-link {
   display: flex;
@@ -437,36 +494,13 @@ function saveChanges() {
   transition: filter 0.1s;
   white-space: nowrap;
 }
-.btn.sm {
-  height: 32px;
-  font-size: 14px;
-  padding: 0 12px;
-}
-.btn.primary {
-  background: var(--section-cta);
-  color: var(--content-always-black);
-}
-.btn.primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.btn.secondary {
-  background: var(--section-floor-1);
-  color: var(--content-primary);
-  border: 1px solid var(--border);
-}
-.btn.secondary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.btn.destructive {
-  background: var(--section-destructive);
-  color: var(--content-destructive);
-  border: none;
-}
-.btn:not(:disabled):hover {
-  filter: brightness(0.96);
-}
+.btn.sm { height: 32px; font-size: 14px; padding: 0 12px; }
+.btn.primary { background: var(--section-cta); color: var(--content-always-black); }
+.btn.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn.secondary { background: var(--section-floor-1); color: var(--content-primary); border: 1px solid var(--border); }
+.btn.secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn.destructive { background: var(--section-destructive); color: var(--content-destructive); border: none; }
+.btn:not(:disabled):hover { filter: brightness(0.96); }
 
 .link-btn {
   background: none;
@@ -479,7 +513,6 @@ function saveChanges() {
   cursor: pointer;
   white-space: nowrap;
 }
-
 .icon-btn {
   display: flex;
   align-items: center;
@@ -493,22 +526,9 @@ function saveChanges() {
   color: var(--content-primary);
   flex-shrink: 0;
 }
-.icon-btn:hover {
-  background: var(--section-interactive);
-}
-
-.icon-sm {
-  font-size: 18px !important;
-  line-height: 1;
-}
-
-.cb {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  accent-color: var(--section-cta);
-  cursor: pointer;
-}
+.icon-btn:hover { background: var(--section-interactive); }
+.icon-sm { font-size: 18px !important; line-height: 1; }
+.cb { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--section-cta); cursor: pointer; }
 
 /* ─────────────────────────────────────────────────────
    LISTINGS — PAGE HEADER
@@ -520,24 +540,11 @@ function saveChanges() {
   padding: 24px 32px;
   border-bottom: 1px solid var(--border);
 }
-.page-heading {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--content-primary);
-}
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
+.page-heading { font-size: 28px; font-weight: 600; color: var(--content-primary); }
+.header-actions { display: flex; gap: 8px; }
 
-/* ─────────────────────────────────────────────────────
-   LISTINGS — TABS
-───────────────────────────────────────────────────── */
-.tab-bar {
-  display: flex;
-  padding: 0 32px;
-  border-bottom: 1px solid var(--border);
-}
+/* ─── TABS ─── */
+.tab-bar { display: flex; padding: 0 32px; border-bottom: 1px solid var(--border); }
 .tab {
   padding: 14px 16px;
   background: none;
@@ -549,22 +556,11 @@ function saveChanges() {
   font-weight: 500;
   color: var(--content-secondary);
   cursor: pointer;
-  transition: color 0.15s;
 }
-.tab.active {
-  color: var(--content-interactive);
-  border-bottom-color: var(--content-interactive);
-}
+.tab.active { color: var(--content-interactive); border-bottom-color: var(--content-interactive); }
 
-/* ─────────────────────────────────────────────────────
-   LISTINGS — TOOLBAR
-───────────────────────────────────────────────────── */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 32px;
-}
+/* ─── TOOLBAR ─── */
+.toolbar { display: flex; align-items: center; gap: 12px; padding: 16px 32px; }
 .search-box {
   display: flex;
   align-items: center;
@@ -577,18 +573,8 @@ function saveChanges() {
   width: 220px;
   color: var(--content-tertiary);
 }
-.search-input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  font-family: 'Gabarito', sans-serif;
-  font-size: 16px;
-  color: var(--content-primary);
-}
-.search-input::placeholder {
-  color: var(--content-tertiary);
-}
+.search-input { flex: 1; background: none; border: none; outline: none; font-family: 'Gabarito', sans-serif; font-size: 16px; color: var(--content-primary); }
+.search-input::placeholder { color: var(--content-tertiary); }
 .sort-pill {
   display: flex;
   align-items: center;
@@ -605,40 +591,14 @@ function saveChanges() {
   cursor: pointer;
 }
 
-/* ─────────────────────────────────────────────────────
-   LISTINGS — BULK ACTION BAR
-───────────────────────────────────────────────────── */
-.bulk-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 32px;
-  border-bottom: 1px solid var(--border);
-  background: var(--section-basement);
-}
-.bulk-check-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-.bulk-count-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--content-primary);
-}
-.bulk-actions {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
+/* ─── BULK ACTION BAR ─── */
+.bulk-bar { display: flex; align-items: center; gap: 16px; padding: 10px 32px; border-bottom: 1px solid var(--border); background: var(--section-basement); }
+.bulk-check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.bulk-count-label { font-size: 14px; font-weight: 500; color: var(--content-primary); }
+.bulk-actions { display: flex; gap: 8px; margin-left: auto; }
 
-/* ─────────────────────────────────────────────────────
-   LISTINGS — TABLE ROWS
-───────────────────────────────────────────────────── */
-.listings-list {
-  padding: 0 32px;
-}
+/* ─── LISTINGS TABLE ROWS ─── */
+.listings-list { padding: 0 32px; }
 .listing-row {
   display: flex;
   align-items: center;
@@ -647,105 +607,27 @@ function saveChanges() {
   border-bottom: 1px solid var(--border);
   transition: background 0.1s;
 }
-.listing-row:hover {
-  background: var(--section-interactive);
-  margin: 0 -32px;
-  padding: 12px 32px;
-}
-.listing-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  background: var(--section-floor-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--content-tertiary);
-}
-.thumb-icon {
-  font-size: 24px;
-}
-.listing-name {
-  flex: 1;
-  min-width: 100px;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--content-primary);
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.badge.available {
-  background: var(--section-success);
-  color: var(--content-success);
-}
-.meta {
-  font-size: 14px;
-  color: var(--content-secondary);
-  min-width: 72px;
-  white-space: nowrap;
-}
-.price {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--content-primary);
-  min-width: 56px;
-}
-.type-pill {
-  font-size: 12px;
-  color: var(--content-secondary);
-  border: 1px solid var(--border);
-  padding: 2px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-.row-action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--content-tertiary);
-  padding: 4px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-}
-.row-action-btn:hover {
-  background: var(--section-floor-2);
-}
+.listing-row:hover { background: var(--section-interactive); margin: 0 -32px; padding: 12px 32px; }
+.listing-thumb { width: 48px; height: 48px; border-radius: 8px; background: var(--section-floor-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--content-tertiary); }
+.thumb-icon { font-size: 24px; }
+.listing-name { flex: 1; min-width: 100px; font-size: 16px; color: var(--content-primary); }
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.badge.available { background: var(--section-success); color: var(--content-success); }
+.meta { font-size: 14px; color: var(--content-secondary); min-width: 72px; white-space: nowrap; }
+.price { font-size: 16px; font-weight: 500; color: var(--content-primary); min-width: 56px; }
+.type-pill { font-size: 12px; color: var(--content-secondary); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.row-action-btn { background: none; border: none; cursor: pointer; color: var(--content-tertiary); padding: 4px; border-radius: 4px; display: flex; align-items: center; }
+.row-action-btn:hover { background: var(--section-floor-2); }
 
-/* ─────────────────────────────────────────────────────
-   LISTINGS — FOOTER
-───────────────────────────────────────────────────── */
-.table-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 32px;
-  border-top: 1px solid var(--border);
-}
-.footer-count {
-  font-size: 14px;
-  color: var(--content-secondary);
-}
-.pagination {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.page-label {
-  font-size: 14px;
-  color: var(--content-secondary);
-  margin-right: 8px;
-}
+/* ─── TABLE FOOTER ─── */
+.table-footer { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-top: 1px solid var(--border); }
+.footer-count { font-size: 14px; color: var(--content-secondary); }
+.pagination { display: flex; align-items: center; gap: 8px; }
+.page-label { font-size: 14px; color: var(--content-secondary); margin-right: 8px; }
 
 /* ─────────────────────────────────────────────────────
    BULK EDIT — STICKY HEADER
+   top: 48px  =  proto-bar height
 ───────────────────────────────────────────────────── */
 .be-header {
   display: flex;
@@ -756,32 +638,15 @@ function saveChanges() {
   border-bottom: 1px solid var(--border);
   background: var(--section-basement);
   position: sticky;
-  top: 0;
+  top: 48px;                 /* proto-bar = 48px */
   z-index: 20;
+  box-sizing: border-box;
 }
-.be-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.be-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--content-primary);
-}
-.be-dot {
-  font-size: 18px;
-  color: var(--content-tertiary);
-}
-.be-count {
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--content-secondary);
-}
-.be-header-right {
-  display: flex;
-  gap: 8px;
-}
+.be-header-left { display: flex; align-items: center; gap: 8px; }
+.be-title { font-size: 18px; font-weight: 600; color: var(--content-primary); }
+.be-dot { font-size: 18px; color: var(--content-tertiary); }
+.be-count { font-size: 18px; font-weight: 400; color: var(--content-secondary); }
+.be-header-right { display: flex; gap: 8px; }
 
 /* ─────────────────────────────────────────────────────
    BULK EDIT — SPREADSHEET TABLE
@@ -791,13 +656,15 @@ function saveChanges() {
   overflow-y: visible;
 }
 .be-table {
-  width: 100%;
   border-collapse: collapse;
   font-family: 'Gabarito', sans-serif;
   font-size: 14px;
+  table-layout: fixed;       /* respect explicit widths */
 }
 
-/* Header row */
+/* ─── Column header row
+   top: 112px  =  proto-bar (48px) + be-header (64px)
+───────────────────────────────────────────────────── */
 .be-table thead th {
   background: var(--section-floor-1);
   color: var(--content-secondary);
@@ -808,12 +675,30 @@ function saveChanges() {
   border-bottom: 1px solid var(--border);
   border-right: 1px solid var(--border);
   white-space: nowrap;
+  overflow: hidden;
   position: sticky;
-  top: 64px; /* below the sticky header */
+  top: 112px;                /* 48 + 64 */
   z-index: 10;
+  /* needed so the resize handle is clipped cleanly */
+  position: sticky;
 }
-.be-table thead th:last-child {
-  border-right: none;
+.be-table thead th:last-child { border-right: none; }
+
+/* ─── Resize handle ─── */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: col-resize;
+  z-index: 1;
+  background: transparent;
+  transition: background 0.1s;
+}
+.resize-handle:hover,
+.resize-handle:active {
+  background: var(--border-strong);
 }
 
 /* Body cells */
@@ -823,56 +708,47 @@ function saveChanges() {
   border-right: 1px solid var(--border);
   vertical-align: middle;
   background: var(--section-basement);
+  overflow: hidden;
 }
-.td-cell:last-child {
-  border-right: none;
-}
+.td-cell:last-child { border-right: none; }
 
-/* Column widths */
-.col-check  { width: 40px;  min-width: 40px; }
-.col-image  { width: 72px;  min-width: 72px; }
-.col-title  { min-width: 200px; }
-.col-stock  { width: 110px; min-width: 110px; text-align: center; }
-.col-price  { width: 100px; min-width: 100px; }
-.col-type   { width: 148px; min-width: 148px; }
-.col-vis    { width: 148px; min-width: 148px; }
-.col-ship   { width: 230px; min-width: 230px; }
-.col-sku    { min-width: 180px; }
+/* Row editing highlight */
+.be-row-editing .td-cell { background: var(--section-floor-1); }
 
-/* Row editing state */
-.be-row-editing td {
-  background: var(--section-floor-1);
-}
+/* Thumbnail */
+.be-thumb { width: 48px; height: 48px; border-radius: 8px; background: var(--section-floor-2); display: flex; align-items: center; justify-content: center; color: var(--content-tertiary); }
+.thumb-icon-sm { font-size: 20px; }
 
-/* Thumbnail in table */
-.be-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  background: var(--section-floor-2);
+/* ─── Title cell ─── */
+.be-title-text {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--content-tertiary);
-}
-.thumb-icon-sm {
-  font-size: 20px;
-}
-
-/* Title cell */
-.be-title-text {
-  display: block;
-  color: var(--content-primary);
+  gap: 4px;
   cursor: text;
-  padding: 4px 4px;
+  padding: 4px;
   border-radius: 4px;
   border: 1px solid transparent;
-  user-select: none;
+  overflow: hidden;
 }
-.be-title-text:hover {
-  border-color: var(--border);
-  background: var(--section-floor-1);
+.be-title-text:hover { border-color: var(--border); background: var(--section-floor-1); }
+
+.title-inner {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--content-primary);
 }
+
+/* Arrow indicator — appears when title > 20 chars */
+.title-overflow-arrow {
+  font-size: 16px !important;
+  color: var(--content-tertiary);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
 .be-title-input {
   width: 100%;
   padding: 4px 8px;
@@ -886,15 +762,12 @@ function saveChanges() {
   box-sizing: border-box;
 }
 
-/* Stock cell */
-.cell-text {
-  color: var(--content-primary);
-  font-size: 14px;
-}
+/* Stock */
+.cell-text { color: var(--content-primary); font-size: 14px; }
 
 /* Price input */
 .be-price-input {
-  width: 72px;
+  width: 100%;
   background: none;
   border: none;
   border-bottom: 1.5px solid transparent;
@@ -903,17 +776,12 @@ function saveChanges() {
   color: var(--content-primary);
   outline: none;
   padding: 2px 0;
+  box-sizing: border-box;
 }
-.be-price-input:focus {
-  border-bottom-color: var(--border-strong);
-}
+.be-price-input:focus { border-bottom-color: var(--border-strong); }
 
-/* Dropdown cells */
-.be-select-wrap {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
+/* Select cells */
+.be-select-wrap { display: flex; align-items: center; position: relative; overflow: hidden; }
 .be-select {
   appearance: none;
   -webkit-appearance: none;
@@ -928,13 +796,7 @@ function saveChanges() {
   min-width: 0;
   padding-right: 24px;
 }
-.be-chevron {
-  font-size: 18px !important;
-  color: var(--content-secondary);
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-}
+.be-chevron { font-size: 18px !important; color: var(--content-secondary); pointer-events: none; position: absolute; right: 0; }
 
 /* SKU input */
 .be-sku-input {
@@ -949,12 +811,8 @@ function saveChanges() {
   padding: 2px 0;
   box-sizing: border-box;
 }
-.be-sku-input::placeholder {
-  color: var(--content-quaternary);
-}
-.be-sku-input:focus {
-  border-bottom-color: var(--border);
-}
+.be-sku-input::placeholder { color: var(--content-quaternary); }
+.be-sku-input:focus { border-bottom-color: var(--border); }
 
 /* ─────────────────────────────────────────────────────
    TOAST — always inverse tokens
@@ -974,17 +832,8 @@ function saveChanges() {
   z-index: 100;
   animation: toast-in 0.2s ease;
 }
-.toast-icon {
-  font-size: 24px;
-  color: var(--content-success);
-}
-.toast-text {
-  font-family: 'Gabarito', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--content-primary-inverse);
-  white-space: nowrap;
-}
+.toast-icon { font-size: 24px; color: var(--content-success); }
+.toast-text { font-family: 'Gabarito', sans-serif; font-size: 14px; font-weight: 500; color: var(--content-primary-inverse); white-space: nowrap; }
 @keyframes toast-in {
   from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
