@@ -70,7 +70,8 @@ const designers = ref([
     name: 'Yufan',
     initials: 'Y',
     prototypes: [
-      { name: 'Example — Listing Card', path: '/yufan/listing-card-example', date: 'Mar 2026' }
+      { name: 'Example — Listing Card', path: '/yufan/listing-card-example', date: 'Mar 2026' },
+      { name: 'Bulk Edit', path: '/yufan/bulk-edit-prototype', date: 'Mar 2026' }
     ]
   },
   {
