@@ -71,7 +71,8 @@ const designers = ref([
     initials: 'Y',
     prototypes: [
       { name: 'Example — Listing Card', path: '/yufan/listing-card-example', date: 'Mar 2026' },
-      { name: 'Bulk Edit', path: '/yufan/bulk-edit-prototype', date: 'Mar 2026' }
+      { name: 'Bulk Edit', path: '/yufan/bulk-edit-prototype', date: 'Mar 2026' },
+      { name: 'Seller Landing Page', path: '/yufan/seller-landing-page', date: 'Mar 2026' }
     ]
   },
   {
