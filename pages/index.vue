@@ -77,7 +77,9 @@ const designers = ref([
   {
     name: 'Shared',
     initials: 'S',
-    prototypes: []
+    prototypes: [
+      { name: 'Branch Design System', path: '/shared/design-system', date: 'Mar 2026' }
+    ]
   }
 ])
 </script>
