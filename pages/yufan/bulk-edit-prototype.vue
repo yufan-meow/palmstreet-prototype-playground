@@ -650,21 +650,23 @@ function saveChanges() {
 
 /* ─────────────────────────────────────────────────────
    BULK EDIT — SPREADSHEET TABLE
+   .be-scroll is the scroll container for both axes.
+   thead th sticks at top: 0 inside this container,
+   which is the correct anchor point.
 ───────────────────────────────────────────────────── */
 .be-scroll {
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: auto;
+  /* 100vh minus proto-bar (48px) and be-header (64px) */
+  height: calc(100vh - 112px);
 }
 .be-table {
   border-collapse: collapse;
   font-family: 'Gabarito', sans-serif;
   font-size: 14px;
-  table-layout: fixed;       /* respect explicit widths */
+  table-layout: fixed;
 }
 
-/* ─── Column header row
-   top: 112px  =  proto-bar (48px) + be-header (64px)
-───────────────────────────────────────────────────── */
+/* ─── Column header row — sticks to top of .be-scroll ─── */
 .be-table thead th {
   background: var(--section-floor-1);
   color: var(--content-secondary);
@@ -677,10 +679,8 @@ function saveChanges() {
   white-space: nowrap;
   overflow: hidden;
   position: sticky;
-  top: 112px;                /* 48 + 64 */
+  top: 0;                    /* relative to .be-scroll, not the page */
   z-index: 10;
-  /* needed so the resize handle is clipped cleanly */
-  position: sticky;
 }
 .be-table thead th:last-child { border-right: none; }
 
