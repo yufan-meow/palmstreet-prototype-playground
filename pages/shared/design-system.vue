@@ -39,9 +39,34 @@
         </div>
 
         <!-- ══════════════════════════════════════════
-             COLORS
+             RULES
         ══════════════════════════════════════════ -->
         <section :id="sections[0].id" class="ds-section">
+          <h2 class="ds-section-title">Rules for Code Generation</h2>
+          <p class="ds-section-desc">These rules apply to all code written for the Seller Hub — human or AI generated.</p>
+
+          <div class="rules-list">
+            <div v-for="(rule, i) in rules" :key="i" class="rule-item">
+              <span class="rule-num">{{ i + 1 }}</span>
+              <span class="rule-text" v-html="rule"></span>
+            </div>
+          </div>
+
+          <h3 class="ds-group-title" style="margin-top:32px">For AI tools</h3>
+          <p class="ds-section-desc">The repo includes a <code>CLAUDE.md</code> at the root. Claude Code, Cursor, and other AI tools automatically read this file for full design system context. Engineers don't need to paste the token list manually — it's always available in the codebase.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span>CLAUDE.md — auto-loaded by AI tools in this repo</span>
+              <span class="code-block-path">palmstreet-prototype-playground/CLAUDE.md</span>
+            </div>
+            <pre class="code-block-body code-block-body--scroll">{{ claudeContextDoc }}</pre>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             COLORS
+        ══════════════════════════════════════════ -->
+        <section :id="sections[1].id" class="ds-section">
           <h2 class="ds-section-title">Semantic color</h2>
           <p class="ds-section-desc">Three token groups. Always use <code>var(--token-name)</code>. Never use base palette values or hex directly in components.</p>
 
@@ -155,7 +180,7 @@
         <!-- ══════════════════════════════════════════
              TYPOGRAPHY
         ══════════════════════════════════════════ -->
-        <section :id="sections[1].id" class="ds-section">
+        <section :id="sections[2].id" class="ds-section">
           <h2 class="ds-section-title">Typography</h2>
           <p class="ds-section-desc">Gabarito only. Weights: Regular (400), Medium (500), SemiBold (600). Click any row to copy the CSS.</p>
 
@@ -186,7 +211,7 @@
         <!-- ══════════════════════════════════════════
              SPACING
         ══════════════════════════════════════════ -->
-        <section :id="sections[2].id" class="ds-section">
+        <section :id="sections[3].id" class="ds-section">
           <h2 class="ds-section-title">Spacing</h2>
           <p class="ds-section-desc">8px base grid. Use only these values. Use <code>9999px</code> for pill shapes.</p>
 
@@ -203,7 +228,7 @@
         <!-- ══════════════════════════════════════════
              COMPONENTS
         ══════════════════════════════════════════ -->
-        <section :id="sections[3].id" class="ds-section">
+        <section :id="sections[4].id" class="ds-section">
           <h2 class="ds-section-title">Components</h2>
 
           <!-- Buttons -->
@@ -324,7 +349,7 @@
                   <span>BranchButton.vue</span>
                   <button type="button" class="copy-inline" @click="copySnippet(branchButtonSource, 'BranchButton component')">Copy</button>
                 </div>
-                <pre class="code-block-body">{{ branchButtonSource }}</pre>
+                <pre class="code-block-body code-block-body--scroll">{{ branchButtonSource }}</pre>
               </div>
             </div>
 
@@ -345,21 +370,6 @@
                   <p class="button-spec-text">{{ item.description }}</p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Toast -->
-          <h3 class="ds-group-title" style="margin-top:32px">Toast</h3>
-          <p class="ds-section-desc" style="margin-bottom:16px">Always uses <strong>inverse tokens</strong> — always appears dark regardless of theme.</p>
-          <div class="component-row">
-            <div class="component-demo">
-              <div class="demo-label">Default</div>
-              <div class="toast-demo">
-                <span class="material-symbols-rounded" style="font-size:24px; color: var(--content-success)">check_circle</span>
-                <span class="toast-text">8 listings updated</span>
-                <button class="toast-action">Undo</button>
-              </div>
-              <code class="demo-code">background: --section-floor-1-inverse<br>text: --content-primary-inverse<br>343×48px</code>
             </div>
           </div>
 
@@ -424,41 +434,6 @@
           </div>
         </section>
 
-        <!-- ══════════════════════════════════════════
-             RULES
-        ══════════════════════════════════════════ -->
-        <section :id="sections[4].id" class="ds-section">
-          <h2 class="ds-section-title">Rules for Code Generation</h2>
-          <p class="ds-section-desc">These rules apply to all code written for the Seller Hub — human or AI generated.</p>
-
-          <div class="rules-list">
-            <div v-for="(rule, i) in rules" :key="i" class="rule-item">
-              <span class="rule-num">{{ i + 1 }}</span>
-              <span class="rule-text" v-html="rule"></span>
-            </div>
-          </div>
-
-          <h3 class="ds-group-title" style="margin-top:32px">For AI tools</h3>
-          <p class="ds-section-desc">The repo includes a <code>CLAUDE.md</code> at the root. Claude Code, Cursor, and other AI tools automatically read this file for full design system context. Engineers don't need to paste the token list manually — it's always available in the codebase.</p>
-          <div class="code-block">
-            <div class="code-block-header">
-              <span>CLAUDE.md — auto-loaded by AI tools in this repo</span>
-              <span class="code-block-path">palmstreet-prototype-playground/CLAUDE.md</span>
-            </div>
-            <pre class="code-block-body">## Design System Tokens
-All tokens live in `/styles/tokens.css`. Always use `var(--token-name)`.
-Never use raw hex values. Never reference base/global token names.
-
-## Rules for Code Generation
-1. Never use raw hex or base token names — always `var(--token-name)`
-2. Never use any typeface other than Gabarito
-3. Always implement both light and dark mode via the token layer
-4. Follow the 8px spacing grid
-5. Primary button label is always `--content-always-black`
-...</pre>
-          </div>
-        </section>
-
       </main>
     </div>
 
@@ -484,12 +459,191 @@ const copiedText = ref('')
 const activeSection = ref('colors')
 
 const sections = [
+  { id: 'rules',      label: 'Rules' },
   { id: 'colors',     label: 'Colors' },
   { id: 'typography', label: 'Typography' },
   { id: 'spacing',    label: 'Spacing' },
   { id: 'components', label: 'Components' },
-  { id: 'rules',      label: 'Rules' },
 ]
+
+const claudeContextDoc = `# Palmstreet Prototype Playground — Claude Context
+
+This is a shared prototyping environment for the Palmstreet design team.
+Read this file before writing any code.
+
+---
+
+## What This Repo Is
+
+A Nuxt 3 app where designers build interactive prototypes using Palmstreet's
+Branch Design System tokens. Every branch auto-deploys to a Vercel preview URL.
+Engineers review prototypes by opening that URL — no local setup needed.
+
+---
+
+## Stack
+
+- **Framework:** Nuxt 3
+- **Styling:** CSS custom properties (semantic tokens from Branch DS)
+- **Typeface:** Gabarito only — loaded via Google Fonts in \`nuxt.config.ts\`
+- **Icons:** Google Material Design Icons, filled + rounded variant only
+- **No component library** — build from scratch using tokens below
+
+---
+
+## File Structure Rules
+
+Each designer gets their own folder under \`/pages/\`:
+
+\`\`\`
+/pages
+  /yufan/              ← Yufan's prototypes
+    my-prototype.vue   ← becomes /yufan/my-prototype
+  /[designer-name]/    ← other designers
+  /shared/             ← shared example components and utilities
+/components/           ← reusable prototype components
+/styles/
+  tokens.css           ← ALL Branch DS semantic tokens (source of truth)
+  base.css             ← reset, Gabarito font, body defaults
+\`\`\`
+
+**Never put prototype files directly in \`/pages/\` root.** Always inside a designer subfolder.
+
+---
+
+## Design System Tokens
+
+All tokens live in \`/styles/tokens.css\`. Always use \`var(--token-name)\`.
+Never use raw hex values. Never reference base/global token names.
+
+### Content Tokens (text, icons — use with \`color\`, \`fill\`, \`stroke\`)
+\`\`\`
+--content-primary         Primary text and icons
+--content-secondary       Supporting text
+--content-tertiary        Muted text, placeholders
+--content-quaternary      Disabled states
+--content-primary-inverse Primary text on dark/filled surfaces
+--content-always-white    Always white, never flips
+--content-always-black    Always black, never flips
+--content-interactive     Links, active tabs, selected states
+--content-destructive     Error text and icons
+--content-success         Success text and icons
+--content-warning         Warning text and icons
+\`\`\`
+
+### Section Tokens (surfaces — use with \`background-color\`)
+\`\`\`
+--section-basement         Base page background
+--section-floor-1          Cards, panels, containers
+--section-floor-2          Popovers, dropdowns, floating UI
+--section-basement-inverse Inverted base background
+--section-floor-1-inverse  Inverted card surface (used by Toast)
+--section-interactive      Hover and focus surfaces
+--section-destructive      Error backgrounds
+--section-success          Success backgrounds
+--section-warning          Warning backgrounds
+--section-cta              #B9EC51 — primary CTA only, never decorative
+--section-always-white     Always white surface
+--section-always-black     Always black surface
+--scrim-heavy              Modal overlays
+--scrim-light              Drawer overlays
+\`\`\`
+
+### Line Tokens (borders — use with \`border-color\`)
+\`\`\`
+--border                  Default borders and dividers
+--border-strong           Focused inputs, emphasized borders
+--border-destructive      Error input borders
+--border-success          Success input borders
+\`\`\`
+
+---
+
+## Typography
+
+Only use Gabarito. Never use system fonts.
+
+| Token name       | Size | Weight | Use |
+|------------------|------|--------|-----|
+| Display0         | 70px | 500    | Hero |
+| Display1         | 57px | 600    | Large display |
+| Headline1        | 32px | 400    | Page headlines |
+| Headline2        | 28px | 400    | Section headlines |
+| Headline3        | 24px | 600    | Sub-headlines |
+| Title1           | 22px | 500    | Titles |
+| Title2           | 18px | 600    | Page titles (mobile nav) |
+| Title3           | 16px | 500    | Section titles |
+| Body1            | 16px | 400    | Primary body text |
+| Body2            | 14px | 400    | Secondary body text |
+| Label1           | 12px | 600    | Input labels, tags |
+| Label2           | 10px | 600    | Small labels |
+| Button1          | 16px | 500    | Button text (medium) |
+| Button2          | 14px | 500    | Button text (small) |
+
+---
+
+## Spacing
+
+8px grid. Use only: \`0, 2, 4, 8, 12, 16, 24, 32, 40, 48\`. Use \`9999px\` for pill shapes.
+
+---
+
+## Platform Rules
+
+**Desktop:** sidebar nav + main content, no fixed width
+**Mobile:** 375px base, full-width stacked layout
+- \`Docked Button\` (375×98px) — mobile-only fixed bottom action bar
+- \`Page Title\` (375×92px) — mobile-only top nav bar with back arrow
+
+---
+
+## Component Rules
+
+### Button
+- Primary: \`background: var(--section-cta)\`, label: \`var(--content-always-black)\` — ALWAYS always-black, never content-primary
+- Secondary: \`background: var(--section-floor-1)\`, border: \`var(--border)\`, label: \`var(--content-primary)\`
+- Destructive: \`background: var(--section-destructive)\`, label: \`var(--content-always-white)\`
+- Height: 40px (medium), 32px (small)
+
+### Toast
+- ALWAYS uses inverse tokens regardless of theme
+- Background: \`var(--section-floor-1-inverse)\`, text: \`var(--content-primary-inverse)\`
+
+### Icons
+- Google Material Icons, filled + rounded ONLY
+- Color always set via a Content token, never hardcoded
+
+---
+
+## Light / Dark Mode
+
+Dark mode is handled entirely via CSS variable swapping at \`:root[data-theme="dark"]\`.
+No component-level overrides needed. The same token names work in both modes.
+
+---
+
+## Rules for Code Generation
+
+1. Never use raw hex or base token names — always \`var(--token-name)\`
+2. Never use any typeface other than Gabarito
+3. Always implement both light and dark mode via the token layer
+4. Follow the 8px spacing grid
+5. Primary button label is always \`--content-always-black\`
+6. Toast always uses inverse tokens
+7. Docked Button and Page Title are mobile-only
+8. Icons: Google Material Design, filled, rounded only
+9. Icon color is always a Content token
+10. No generic SaaS aesthetics — neutral, marketplace character
+
+---
+
+## Adding a New Prototype
+
+1. Create \`/pages/[your-name]/[prototype-name].vue\`
+2. Use tokens from \`/styles/tokens.css\`
+3. Keep it self-contained — inline styles are fine for prototypes
+4. Push your branch — Vercel auto-generates a preview URL
+5. Share the URL in Slack or Linear for engineer review`
 
 // ─── Token lists ──────────────────────────────────────
 // lightBase / darkBase → Tier-1 palette reference for each mode (Figma naming)
@@ -970,10 +1124,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .button-api-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
 .button-api-type { font-size: 12px; color: var(--content-secondary); font-family: monospace; }
 
-.toast-demo { display: flex; align-items: center; gap: 8px; background: var(--section-floor-1-inverse); padding: 0 12px; height: 48px; border-radius: 8px; min-width: 260px; }
-.toast-text { flex: 1; font-size: 14px; font-weight: 500; color: var(--content-primary-inverse); }
-.toast-action { background: none; border: none; font-family: 'Gabarito', sans-serif; font-size: 16px; font-weight: 500; color: var(--content-interactive); cursor: pointer; }
-
 .badge-demo { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
 .badge-demo.success { background: var(--section-success); color: var(--content-success); }
 .badge-demo.destructive { background: var(--section-destructive); color: var(--content-destructive); }
@@ -1001,6 +1151,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--section-floor-2); font-size: 12px; font-weight: 600; color: var(--content-secondary); }
 .code-block-path { font-family: monospace; font-weight: 400; color: var(--content-tertiary); }
 .code-block-body { margin: 0; padding: 16px; background: var(--section-floor-1); font-family: monospace; font-size: 12px; color: #823FEE; line-height: 1.7; overflow-x: auto; white-space: pre; }
+.code-block-body--scroll { max-height: 420px; overflow: auto; }
 
 /* ─── Copy toast ─── */
 .copy-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--section-floor-1-inverse); color: var(--content-primary-inverse); border-radius: 9999px; font-size: 13px; font-weight: 500; z-index: 100; animation: fade-up 0.2s ease; white-space: nowrap; }
